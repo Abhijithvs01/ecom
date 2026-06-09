@@ -1,5 +1,63 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+from .models import Order, Odered_item
+from products.models import products   # FIXED IMPORT
+
+
+# ---------------- CART VIEW ----------------
 def cart(request):
-    return render(request, 'cart.html')
+
+    # If user not logged in → show page
+    if not request.user.is_authenticated:
+        return render(request, 'ifnouser.html')
+
+    customer = request.user.Customer_Profile
+
+    cart = Order.objects.filter(
+        owner=customer,
+        order_status=Order.CART_STAGE
+    ).first()
+
+    return render(request, 'cart.html', {
+        'cart': cart
+    })
+
+
+# ---------------- ADD TO CART ----------------
+@login_required(login_url='account')   # or 'login'
+def add_to_cart(request):
+
+    if request.method == "POST":
+
+        customer = request.user.Customer_Profile
+
+        quantity = int(request.POST.get('quantity', 1))
+        product_id = request.POST.get('product_id')
+        size = request.POST.get('size')
+
+        # get or create cart
+        cart_obj, created = Order.objects.get_or_create(
+            owner=customer,
+            order_status=Order.CART_STAGE
+        )
+
+        # get product
+        product = products.objects.get(pk=product_id)
+
+        # get or create cart item
+        ordered_item, created = Odered_item.objects.get_or_create(
+            product=product,
+            owner=cart_obj,
+            size=size
+        )
+
+        # update quantity correctly
+        if created:
+            ordered_item.quantity = quantity
+        else:
+            ordered_item.quantity += quantity
+
+        ordered_item.save()
+
+    return redirect('cart')
