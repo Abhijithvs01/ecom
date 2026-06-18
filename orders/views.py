@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from .models import Order, Odered_item
@@ -24,7 +24,40 @@ def cart(request):
     })
 
 
-# ---------------- ADD TO CART ----------------
+def checkout(request):
+    if request.POST:
+        user = request.user
+        customer = request.user.Customer_Profile
+        total = request.POST.get('total')
+        Order_obj = Order.objects.get(
+            owner = customer,
+            order_status = Order.CART_STAGE
+        )
+        if Order_obj:
+            Order_obj.order_status = Order.ORDER_CONFIRMED
+            Order_obj.save()
+            return render(request, "sucess.html")
+        else:
+            return render(request,"failed.html")
+
+
+def increase_quntity(request,id):
+    item = get_object_or_404(Odered_item, id = id)
+    item.quantity += 1
+    item.save()
+    return redirect('cart')
+def decrease_quntity(request,id):
+    item = get_object_or_404(Odered_item, id = id)
+    if item.quantity > 1:
+        item.quantity -= 1
+        item.save()
+    return redirect('cart')
+def remove_from_cart(request,id):
+    item = Odered_item.objects.get(id = id)
+    if item:
+        item.delete()
+    return redirect('cart')   
+ 
 @login_required(login_url='account')   # or 'login'
 def add_to_cart(request):
 
