@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from .models import Order, Odered_item
-from products.models import products   # FIXED IMPORT
+from .models import Order, Order_item
+from products.models import products  # FIXED IMPORT
 
 
 # ---------------- CART VIEW ----------------
@@ -22,7 +22,18 @@ def cart(request):
     return render(request, 'cart.html', {
         'cart': cart
     })
+@login_required(login_url='account')
+def order(request):
+    customer = request.user.Customer_Profile
 
+    all_orders = Order.objects.filter(
+        owner=customer
+    ).exclude(order_status=Order.CART_STAGE)
+
+    context = {
+        'orders': all_orders
+    }
+    return render(request, "order.html", context)
 
 def checkout(request):
     if request.POST:
@@ -42,18 +53,18 @@ def checkout(request):
 
 
 def increase_quntity(request,id):
-    item = get_object_or_404(Odered_item, id = id)
+    item = get_object_or_404(Order_item, id = id)
     item.quantity += 1
     item.save()
     return redirect('cart')
 def decrease_quntity(request,id):
-    item = get_object_or_404(Odered_item, id = id)
+    item = get_object_or_404(Order_item, id = id)
     if item.quantity > 1:
         item.quantity -= 1
         item.save()
     return redirect('cart')
 def remove_from_cart(request,id):
-    item = Odered_item.objects.get(id = id)
+    item = Order_item.objects.get(id = id)
     if item:
         item.delete()
     return redirect('cart')   
@@ -79,7 +90,7 @@ def add_to_cart(request):
         product = products.objects.get(pk=product_id)
 
         # get or create cart item
-        ordered_item, created = Odered_item.objects.get_or_create(
+        ordered_item, created = Order_item.objects.get_or_create(
             product=product,
             owner=cart_obj,
             size=size

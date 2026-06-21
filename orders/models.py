@@ -15,13 +15,14 @@ class Order(models.Model):
                       (ORDER_DELIVERED,'OrderDelivered'),
                       (ORDER_REJECTED,'OrderRejected'))
     delete_choices = ((LIVE,'Live'),(DELETE,'Delete'))
+    total_price = models.FloatField(default=0)
     owner = models.ForeignKey(customer,on_delete=models.SET_NULL,related_name="orders",null=True)
     delete_status = models.IntegerField(choices = delete_choices,default = LIVE)
     order_status = models.IntegerField(choices=STATUS_CHOICES,default=CART_STAGE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class Odered_item(models.Model):
+class Order_item(models.Model):
     product = models.ForeignKey(products,related_name="ordered_items",on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     size = models.CharField(max_length=5, default='M')
