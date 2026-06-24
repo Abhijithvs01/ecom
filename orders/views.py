@@ -18,9 +18,12 @@ def cart(request):
         owner=customer,
         order_status=Order.CART_STAGE
     ).first()
+    count  = cart.added_items.count()
+    print(count)
 
     return render(request, 'cart.html', {
-        'cart': cart
+        'cart': cart,
+        'count':count
     })
 @login_required(login_url='account')
 def order(request):

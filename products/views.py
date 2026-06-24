@@ -7,7 +7,7 @@ def index(request):
     context = {'product':featured_product}
     print(context)
     return render(request, 'index.html',context)
-def list_product(request):
+def product(request):
     page = 1
     if request.GET:
         page = request.GET.get('page',1)

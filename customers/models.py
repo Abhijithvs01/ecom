@@ -18,9 +18,10 @@ class customer(models.Model):
         (LIVE, 'Live'),
         (DELETE, 'Delete'),
     )
-
+    fullname = models.CharField()
     username = models.CharField(max_length=200)
     address = models.TextField()
+    image = models.ImageField(upload_to= 'media/')
 
     user = models.OneToOneField(
         User,
@@ -39,6 +40,7 @@ class customer(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
     def __str__(self):
         return self.user.username

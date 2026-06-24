@@ -5,6 +5,14 @@ from django.contrib import messages
 from .models import customer
 
 
+def contact(request):
+     return render(request,"contact.html")
+def about(request):
+     return render(request,"about.html")
+def profile(request):
+     customer  = request.user.Customer_Profile
+     context = {"customer": customer}
+     return render(request, "profile.html",context)
 def sign_out(request):
      logout(request)
      return redirect('/')
@@ -37,13 +45,14 @@ def login_page(request):
 def register(request):
 
     if request.method == "POST":
-
-        username = request.POST.get('fullname')
+        fullname = request.POST.get('fullname')
+        username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         address = request.POST.get('address')
         phonenumber = request.POST.get('phonenumber')
+        profile_image = request.FILES.get('profile_image')
 
         # Password validation
         if password != confirm_password:
@@ -86,6 +95,8 @@ def register(request):
 
         # Create Customer Profile
         customer.objects.create(
+            image = profile_image,
+            fullname = fullname,
             username=username,
             user=user,
             phone=phonenumber,
