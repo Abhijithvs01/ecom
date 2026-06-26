@@ -1,0 +1,179 @@
+{% load static %}
+{% load multiply %}
+{% load subtotal %}
+{% load total %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klavix-Cart</title>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+        <link rel="apple-touch-icon" href="{% static 'img/icon.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/icon.ico' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+
+        <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+
+</head>
+<body>
+{% include 'header.html' %}
+
+
+{% if user.is_authenticated %}
+ 
+    {% if cart and cart.added_items.all %}
+
+    <div class="container py-5">
+
+        <div class="cart-header">
+            <h1>Shopping Cart</h1>
+            <p>Review your selected items</p>
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-8">
+
+                {% for cart_item in cart.added_items.all %}
+
+                <div class="cart-card">
+
+                    <div class="image-wrapper">
+                        <img src="{{ cart_item.product.image.url }}"
+                             alt="{{ cart_item.product.title }}"
+                             class="cart-image">
+                    </div>
+
+                    <div class="cart-details">
+
+                        <h4>{{ cart_item.product.title }}</h4>
+
+                        <span class="product-size">
+                            Size: {{ cart_item.size }}
+                        </span>
+
+                        <div class="price">
+                            ₹{% multiply cart_item.product.price cart_item.quantity %}
+                        </div>
+
+                        <div class="quantity-box">
+
+                            <a href="{% url 'decrease_quntity' cart_item.id %}"><button class="qty-btn plus">
+                                -
+                            </button>
+                            </a>
+
+                            <input type="text"
+                                   value="{{ cart_item.quantity }}"
+                                   class="qty-input">
+
+                            <a href="{% url 'increase_quntity' cart_item.id %}"><button class="qty-btn plus">
+                                +
+                            </button>
+                            </a>
+
+                        </div>
+
+                    </div>
+                    <a href="{% url 'remove_from_cart' cart_item.id %}">
+                    <button class="remove-btn">
+                        Remove
+                    </button>
+                    </a>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="summary-card">
+
+                    <h3>Order Summary</h3>
+
+                    <div class="summary-row">
+                        <span>subtotal</span>
+                        <span>₹{% subtotal  cart %}</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span>₹100</span>
+                    </div>
+                    {% if discount %}
+                    <div class="summary-row">
+                        <span>Discount</span>
+                        <span class="discount">-₹0</span>
+                    </div>
+                    {% else %}
+                    <div class="summary-row">
+                        <span>Discount</span>
+                        <span class="discount">No Discounts</span>
+                    </div>
+                    {% endif %}
+                    <hr>
+
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>{% total cart %}</span>
+                    </div>
+
+                    <form action="{% url 'checkout' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="total" value="{% total cart %}">
+                            <button type="submit" class="checkout-btn">
+                                Proceed To Checkout
+                            </button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    {% else %}
+     <div class="empty-cart">
+
+        <div class="empty-card">
+
+            <div class="empty-icon">
+                🛒
+            </div>
+
+            <h2>Your Cart Is Empty</h2>
+
+            <p>
+                Start shopping and add amazing products to your cart.
+            </p>
+
+            <a href="/" class="shop-btn">
+                Continue Shopping
+            </a>
+
+        </div>
+
+    </div>
+
+
+{% endif %}
+
+
+
+{% endif %}
+
+<script src="{% static 'js/cart.js' %}"></script>
+
+</body>
+</html>

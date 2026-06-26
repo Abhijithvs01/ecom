@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ifnouser.css' %}">
+</head>
+<body>
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-icon">
+            🛒
+        </div>
+
+        <h1>Your Cart Awaits</h1>
+
+        <p>
+            Sign in to save items, track orders,
+            and enjoy a seamless shopping experience.
+        </p>
+
+        <div class="auth-buttons">
+
+            <a href="account" class="signup-btn">
+                Login
+            </a>
+
+            <a href="register" class="login-btn">
+                Create Account
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+</body>

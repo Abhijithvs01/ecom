@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Successful</title>
+
+    <style>
+        body{
+            margin:0;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#f8f9fa;
+            font-family:Arial, sans-serif;
+        }
+
+        .success-card{
+            background:white;
+            padding:40px;
+            border-radius:15px;
+            text-align:center;
+            box-shadow:0 4px 20px rgba(0,0,0,0.1);
+            max-width:500px;
+            width:90%;
+        }
+
+        .checkmark{
+            width:100px;
+            height:100px;
+            background:#198754;
+            color:white;
+            font-size:50px;
+            border-radius:50%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin:0 auto 20px;
+        }
+
+        h1{
+            color:#198754;
+            margin-bottom:10px;
+        }
+
+        p{
+            color:#555;
+            margin-bottom:25px;
+        }
+
+        .btn{
+            display:inline-block;
+            background:#198754;
+            color:white;
+            text-decoration:none;
+            padding:12px 25px;
+            border-radius:8px;
+            font-weight:bold;
+            transition:0.3s;
+        }
+
+        .btn:hover{
+            background:#146c43;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="success-card">
+        <div class="checkmark">✓</div>
+
+        <h1>Order Placed Successfully!</h1>
+
+        <p>
+            Thank you for shopping with us.
+            Your order has been confirmed.
+        </p>
+
+        <a href="{% url 'home' %}" class="btn">
+            Continue Shopping
+        </a>
+    </div>
+
+</body>
+</html>

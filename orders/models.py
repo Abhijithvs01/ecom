@@ -1,6 +1,7 @@
 from django.db import models
 from customers.models import customer
 from products.models import products
+import uuid
 
 # Create your models here.
 class Order(models.Model):
