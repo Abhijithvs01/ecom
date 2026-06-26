@@ -56,8 +56,12 @@
     </style>
 </head>
 
-<body class="container mt-4">
 
+
+<body>
+    {% include 'header.html' %}
+
+<div class="container mt-4">
     <h2 class="search-title">Search Results</h2>
 
     {% if query %}
@@ -119,6 +123,7 @@
             <p class="text-danger">No products found.</p>
         {% endfor %}
 
+    </div>
     </div>
 
 </body>
